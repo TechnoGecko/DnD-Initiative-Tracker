@@ -19,12 +19,19 @@ The first thing the program will prompt you to do is to enter the names of each 
 
 ![I-T_Thumbnail3](https://user-images.githubusercontent.com/80658777/195190624-ec480207-43cf-4721-bd19-3f30920cd10e.png)
 
-###### From here I've selected option 1, which you will do when you begin combat. All you need to do is enter the name of each monster, followed by it's dexterity modifier, and the roll will be taken care of for you instantly! Once you're finished, enter 'continue' just as before, and it's time for the fun part:
+###### From here I've selected option 1, which you will do when you begin combat. All you need to do is enter the name of each monster, followed by it's dexterity modifier, and the roll will be taken care of for you instantly!
 
 ![ITThumb4](https://user-images.githubusercontent.com/80658777/195190645-59c18edf-4f0b-4fcc-aa6b-50f134a372cf.png)
+
+######  Once you're finished, enter 'continue' just as before, and it's time for the fun part:
 
 ### Ask players for initiative
 
 ###### At this point, all we have to do is take every player's initiative in the order that we entered their names originally, and the initiative for that combat will be sorted and tracked! You can cycle through them with an entry of '1', and of course you can take creatures out of combat if they flee or fall to 0, or add them in if your players are making quick work of your big epic boss and you need to send them some support!
 
 ![thumb5](https://user-images.githubusercontent.com/80658777/195191611-a010a8c9-5454-4501-8b17-d870d2eae453.png)
+
+
+### Getting the .exe!
+
+###### If you'd like to play with this tool, know that you currently only select option 1 once you're in combat, so you'll just have to close the program once you're done playing with it. But I'll be updating this in probably the next day, and so hopefully nobody even reads this part of the README 😅 
