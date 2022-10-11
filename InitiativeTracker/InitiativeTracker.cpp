@@ -21,6 +21,25 @@ bool comp(pair<string, int>& a, pair<string, int>& b)
     return a.second > b.second;
 }
 
+string printInitiative(vector<pair<string, int>>& initiative)
+{
+    cout
+        << "|====================================================|\n"
+        << "|//////////////////Initiative Order//////////////////|\n"
+        << "|====================================================|\n"
+        << "\n"
+        << "\n";
+
+    int j = 1;
+
+    for (auto i : initiative)
+    {
+        cout << "        ||   " << j << ".    " << i.first << " : " << i.second << endl;
+        cout << "        ||   " << "----------------------------------" << endl;
+        j++;
+    }
+}
+
 int main()
 {
     map<string, int> initOrder;
@@ -40,6 +59,9 @@ int main()
     int playerInitiative;
     int initModifier;
     int turnCounter = 0;
+    int deleteChoice;
+
+    vector<pair<string, int>>::iterator initiativeIterator;
 
 
     //the color variable seems to change background with the first character (5), then font color with the second (e)
@@ -190,12 +212,12 @@ int main()
             {
             case 1:
                 cout 
-
+                    << "\n\n\n"
                     << "|====================================================|\n"
                     << "|////////////////////////////////////////////////////|\n"
                     << "|====================================================|\n"
                     << "        Beginning Combat. Roll Initiative!\n"
-                    << "|====================================================|n"
+                    << "|====================================================|\n"
                     << "|////////////////////////////////////////////////////|\n"
                     << "|====================================================|\n"
                     << "\n"
@@ -215,9 +237,9 @@ int main()
                     << "\n"
                     << "\n"
                     << "\n"
-                    << "  .--.      .-'.      .--.      .--.      .--.      .--.      .`-.      .--.\n"
-                    << ":::::.\\::::::::.\\::::::::.\\::::::::.\\::::::::.\\::::::::.\\::::::::.\\::::::::.\\\n"
-                    << "'      `--'      `.-'      `--'      `--'      `--'      `-.'      `--'      `\n"
+                    << "  .--.      .-'.      .--.      .--.      .--.      .--.    \n"
+                    << ":::::.\\::::::::.\\::::::::.\\::::::::.\\::::::::.\\::::::::.\\\n"
+                    << "'      `--'      `.-'      `--'      `--'      `--'      `-.`\n"
                     << "\n";
                    
                 
@@ -225,6 +247,7 @@ int main()
                 inCombat = true;
                 enteringEnemies = true;
                 calculateInitiative = true;
+                initOrder.clear();
                 break;
             case 2:
                 cout << "Please enter name of party member to add\n";
@@ -279,13 +302,13 @@ int main()
                 //Loop to add enemies to the combat
                 while(enteringEnemies == true)
                 {
-                    cout << "Please enter name of enemy to add: \n";
+                    cout << "Please enter name of enemy to add: \n\n";
                     cin >> enemyName;
 
                     //Break here if user enters continue
                     if (enemyName == "continue")
                     {
-                        cout << "Finished entering enemies!\n";
+                        cout << "Finished entering enemies!\n\n";
                         enteringEnemies = false;
                     }
                     else
@@ -293,7 +316,7 @@ int main()
                         //if enemy name is not already used, generate and record it's initiative
                         if (initOrder[enemyName] == NULL)
                         {
-                            cout << "Enemy initiaitive modifier: \n";
+                            cout << "\nEnemy initiaitive modifier: \n\n";
                             cin >> initModifier;
                             if (cin.eof()) break;
                             if (!cin)
@@ -305,7 +328,7 @@ int main()
                             }
 
                             initOrder[enemyName] = rand() % 20 + (1 + initModifier);
-                            cout << enemyName << " added with initiative of: " << initOrder[enemyName] << endl;
+                            cout << enemyName << " added with initiative of: " << initOrder[enemyName] << "\n" << endl;
                         }
                         else
                         {
@@ -336,26 +359,11 @@ int main()
 
                 
                     sort(currentInitiative.begin(), currentInitiative.end(), comp);
-                    calculateInitiative = false;
+                    printInitiative(currentInitiative);
 
-                    cout
-                        << "|====================================================|\n"
-                        << "|//////////////////Initiative Order//////////////////|\n"
-                        << "|====================================================|\n"
-                        << "\n"
-                        << "\n";
-                    //For debugging purposes mainly, might keep it
-                    for (auto i : currentInitiative)
-                    {
-                        cout << "        ||   " << i.first << " : " << i.second << endl;
-                        cout << "        ||   " << "----------------------------------" << endl;
-                    }
+                    calculateInitiative = false;
             }
 
-
-            
-            
-                
 
                 cout << "\nPlease select an option: \n"
                     << "1. Next turn\n"
@@ -389,10 +397,92 @@ int main()
                     progressTurn = true;
                     break;
                 case 2:
+                    
+                    cout << "Please select which creature to remove from combat: \n";
+                    printInitiative(currentInitiative);
+                    cout << "\n";
+                    cin >> deleteChoice;
+                    if (cin.eof()) break;
+                    if (!cin)
+                    {
+                        cerr << "Bad input" << endl;
+                        cin.clear();
+                        cin.ignore();
+                        break;
+                    }
+
+                    if (deleteChoice >= currentInitiative.size() + 1)
+                    {
+                        cout << "Out of bounds input (larger than size of initiative list)";
+                        break;
+                    }
+
+                    cout << "Removed creature # " << deleteChoice << " from initiative, new initiative:\n";
+                    currentInitiative.erase(next(currentInitiative.begin(), deleteChoice - 1));
+                    sort(currentInitiative.begin(), currentInitiative.end(), comp);
+                    printInitiative(currentInitiative);
+                    
+                    /*system("pause");*/
+                    do
+                    {
+                        cout << "\n\nPress any key to continue///\n\n";
+                    } while (cin.get() != '\n');
+                    
+
                     break;
                 case 3:
+                    
+                    
+                    enteringEnemies = true;
+                    do
+                    {
+                        cout << "Please enter name of enemy to add: \n\n";
+                        cin >> enemyName;
+
+                        //Break here if user enters continue
+                        if (enemyName == "continue")
+                        {
+                            cout << "Finished entering enemies!\n\n";
+                            enteringEnemies = false;
+                        }
+                        else
+                        {
+                            //if enemy name is not already used, generate and record it's initiative
+                            if (initOrder[enemyName] == NULL)
+                            {
+                                cout << "\nEnemy initiaitive modifier: \n\n";
+                                cin >> initModifier;
+                                if (cin.eof()) break;
+                                if (!cin)
+                                {
+                                    cerr << "Bad input" << endl;
+                                    cin.clear();
+                                    cin.ignore();
+                                    break;
+                                }
+
+                                initOrder[enemyName] = rand() % 20 + (1 + initModifier);
+                                for (auto creature : initOrder)
+                                {
+                                    currentInitiative.push_back(make_pair(creature.first, creature.second));
+                                }
+                                sort(currentInitiative.begin(), currentInitiative.end(), comp);
+                                cout << enemyName << " added with initiative of: " << initOrder[enemyName] << "\n" << endl;
+                            }
+                            else
+                            {
+                                cout << "Enemy name is already in use this combat\n";
+                                cin.clear();
+                                cin.ignore();
+                            }
+
+                        }
+                    } while (enteringEnemies != false);
+                    
                     break;
                 case 4:
+                    cout << "Ending combat!\n\n";
+                    inCombat = false;
                     break;
                 }
 
