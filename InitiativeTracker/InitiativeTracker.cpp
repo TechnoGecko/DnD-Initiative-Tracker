@@ -1,4 +1,4 @@
-// InitiativeTracker.cpp : This file contains the 'main' function. Program execution begins and ends there.
+﻿// InitiativeTracker.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
 #include <iostream>
@@ -21,7 +21,7 @@ bool comp(pair<string, int>& a, pair<string, int>& b)
     return a.second > b.second;
 }
 
-string printInitiative(vector<pair<string, int>>& initiative)
+string printInitiative(vector<pair<string, int>>& initiative, int turnCounter)
 {
     cout
         << "|====================================================|\n"
@@ -34,8 +34,17 @@ string printInitiative(vector<pair<string, int>>& initiative)
 
     for (auto i : initiative)
     {
-        cout << "        ||   " << j << ".    " << i.first << " : " << i.second << endl;
-        cout << "        ||   " << "----------------------------------" << endl;
+        if (j == turnCounter + 1)
+        {
+            cout << "        ||   " << j << ".    " << i.first << " : " << i.second << "  <=====}->" << endl;
+            cout << "        ||   " << "----------------------------------" << endl;
+        }
+        else
+        {
+            cout << "        ||   " << j << ".    " << i.first << " : " << i.second << endl;
+            cout << "        ||   " << "----------------------------------" << endl;
+        }
+        
         j++;
     }
 }
@@ -54,6 +63,7 @@ int main()
     bool programRunning = true;
     bool calculateInitiative = false;
     bool progressTurn = false;
+    bool rewindTurn = false;
     int choice;
     int inCombatChoice;
     int playerInitiative;
@@ -248,6 +258,8 @@ int main()
                 enteringEnemies = true;
                 calculateInitiative = true;
                 initOrder.clear();
+                currentInitiative.clear();
+                turnCounter = 0;
                 break;
             case 2:
                 cout << "Please enter name of party member to add\n";
@@ -359,17 +371,22 @@ int main()
 
                 
                     sort(currentInitiative.begin(), currentInitiative.end(), comp);
-                    printInitiative(currentInitiative);
+                    printInitiative(currentInitiative, turnCounter);
 
                     calculateInitiative = false;
             }
 
 
-                cout << "\nPlease select an option: \n"
-                    << "1. Next turn\n"
-                    << "2. Remove creature from initiative\n"
-                    << "3. Add creature to initiative\n"
-                    << "4. End Combat\n";
+            cout << "\nPlease select an option: \n"
+                << "1. Next turn\n"
+                << "2. Remove creature from initiative\n"
+                << "3. Add creature to initiative\n"
+                << "4. Print current initiative list\n"
+                << "5. Woops! (rewind one turn)\n"
+                << "6. End Combat\n\n";
+                
+
+                    
 
                 cin >> inCombatChoice;
 
@@ -384,22 +401,36 @@ int main()
                     }
                     progressTurn = false;
                 }
+                if (rewindTurn == true)
+                {
+                    if (turnCounter == 0)
+                    {
+                        turnCounter = currentInitiative.size() - 1;
+                    }
+                    else
+                    {
+                        turnCounter--;
+                    }
+                    rewindTurn = false;
+                }
 
                 switch (inCombatChoice)
                 {
                 case 1:
-                    cout
-                        << "|====================================================|\n"
-                        << "|<////////////////}~~Current Turn~~{////////////////>|\n"
-                        << "|====================================================|\n"
-                        << "\n"
-                        << "                  " << currentInitiative[turnCounter].first << "\n";
+                    if (turnCounter < currentInitiative.size() - 1)
+                    {
+                        printInitiative(currentInitiative, turnCounter + 1);
+                    }
+                    else
+                    {
+                        printInitiative(currentInitiative, 0);
+                    }
                     progressTurn = true;
                     break;
                 case 2:
                     
                     cout << "Please select which creature to remove from combat: \n";
-                    printInitiative(currentInitiative);
+                    printInitiative(currentInitiative, turnCounter);
                     cout << "\n";
                     cin >> deleteChoice;
                     if (cin.eof()) break;
@@ -420,12 +451,12 @@ int main()
                     cout << "Removed creature # " << deleteChoice << " from initiative, new initiative:\n";
                     currentInitiative.erase(next(currentInitiative.begin(), deleteChoice - 1));
                     sort(currentInitiative.begin(), currentInitiative.end(), comp);
-                    printInitiative(currentInitiative);
+                    printInitiative(currentInitiative, turnCounter);
                     
                     /*system("pause");*/
                     do
                     {
-                        cout << "\n\nPress any key to continue///\n\n";
+                        cout << "\n\nPress any key to continue...\n\n";
                     } while (cin.get() != '\n');
                     
 
@@ -481,10 +512,27 @@ int main()
                     
                     break;
                 case 4:
+                    printInitiative(currentInitiative, turnCounter);
+                    break;
+                case 5:
+
+                    if (turnCounter > 0) {
+                        printInitiative(currentInitiative, turnCounter - 1);
+                    }
+                    else
+                    {
+                        printInitiative(currentInitiative, currentInitiative.size() - 1);
+                    }
+                    
+                    rewindTurn = true;
+                    break;
+                case 6:
                     cout << "Ending combat!\n\n";
                     inCombat = false;
                     break;
                 }
+                
+
 
                
 
